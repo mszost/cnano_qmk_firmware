@@ -35,9 +35,10 @@
 // #define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 #endif // POINTING_DEVICE_ENABLE
 
-// Maccel
+/* Maccel
 #define MOUSE_EXTENDED_REPORT
 #define MACCEL_TAKEOFF 2.0      // lower/higher value = curve takes off more smoothly/abruptly
 #define MACCEL_GROWTH_RATE 0.25 // lower/higher value = curve reaches its upper limit slower/faster 
 #define MACCEL_OFFSET 2.2       // lower/higher value = acceleration kicks in earlier/later
 #define MACCEL_LIMIT 0.2        // lower limit of accel curve (minimum acceleration factor)
+*/

@@ -51,7 +51,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 
 
 enum charybdis_keymap_layers {
-    LAYER_BASE = 0,
+    LAYER_BASE,
     LAYER_NAV,
     LAYER_NUM,
     LAYER_SYM,
@@ -61,65 +61,63 @@ enum charybdis_keymap_layers {
 
 
 #define SPC_NAV LT(LAYER_NAV, KC_SPC)
+#define BCK_NAV LT(LAYER_NAV, KC_BSPC)
+#define RET_NUM LT(LAYER_NUM, KC_ENT)
+#define ESC_SYM LT(LAYER_SYM, KC_ESC)
 #define TAB_FN LT(LAYER_FN, KC_TAB)
-#define ENT_NUM LT(LAYER_NUM, KC_ENT)
-#define BCK_SYM LT(LAYER_SYM, KC_BSPC)
-#define SLASH_PTR LT(LAYER_PTR, KC_SLASH)
+#define SLSH_PTR LT(LAYER_PTR, KC_SLASH)
 #define _L_PTR(KC) LT(LAYER_PTR, KC)
 
 
-/** Convenience row shorthands. 
+// Convenience row shorthands. 
 #define _______________DEAD_HALF_ROW_______________ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-#define ______________HOME_ROW_GACS_L______________ KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX
+#define ___________TRANSPARENT_HALF_ROW____________ _______, _______, _______, _______, _______
 #define ______________HOME_ROW_GACS_R______________ XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI
-*/
-
-// Base layer: Colemak-DH 3x10 Matrix
-#define LAYOUT_LAYER_BASE                                                                             \
-  /*--------+--------+--------+--------+--------+    +--------|--------|--------|--------|--------|*/ \
-      KC_Q  ,  KC_W  ,  KC_F  ,  KC_P  ,  KC_B  ,       KC_J  ,  KC_L  ,  KC_U  ,  KC_Y  , KC_MINS,   \
-  /*--------|--------|--------|--------|--------|    |--------|--------|--------|--------|--------|*/ \
-      KC_A  ,  KC_R  ,  KC_S   ,  KC_T ,  KC_G  ,       KC_M  ,  KC_N  ,  KC_E  ,  KC_I  ,  KC_O  ,   \
-  /*--------|--------|--------|--------|--------|    |--------|--------|--------|--------|--------|*/ \
-      KC_Z  ,  KC_X  ,  KC_C  ,  KC_D  ,  KC_V  ,       KC_K  ,  KC_H  ,KC_COMMA, KC_DOT , KC_SLASH,  \
-  /*--------+--------|--------|--------|--------|    |--------|--------|--------|--------|--------|*/ \
-                LGUI_T(KC_ESC),   SPC_NAV, TAB_FN,     KC_RETURN, KC_BSPC  
-  /*                 +--------|--------|--------+    +--------|--------+                           */
 
 
+// Colemak-DH with GACS home-row mods
+#define LAYOUT_LAYER_BASE \
+    KC_Q,         KC_W,         KC_F,         KC_P,         KC_B,        KC_J,  KC_L,         KC_U,         KC_Y,         KC_MINS,      \
+    LGUI_T(KC_A), LALT_T(KC_R), LCTL_T(KC_S), LSFT_T(KC_T), KC_G,        KC_M,  RSFT_T(KC_N), RCTL_T(KC_E), RALT_T(KC_I), RGUI_T(KC_O), \
+    KC_Z,         KC_X,         KC_C,         KC_D,         KC_V,        KC_K,  KC_H,         KC_COMMA,     KC_DOT,       SLSH_PTR,     \
+                             ESC_SYM,      SPC_NAV,         TAB_FN,      RET_NUM,  BCK_NAV
 
-#define LAYOUT_LAYER_PTR                                                                              \
-  /*--------+--------+--------+--------+--------+    +--------|--------|--------|--------|--------|*/ \
-    XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,   \
-  /*--------|--------|--------|--------|--------|    |--------|--------|--------|--------|--------|*/ \
-    XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    \
-  /*--------|--------|--------|--------|--------|    |--------|--------|--------|--------|--------|*/ \
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX ,     XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   \
-  /*--------+--------|--------|--------|--------|    |--------|--------|--------|--------|--------|*/ \
-                      XXXXXXX, XXXXXXX,  XXXXXXX,      XXXXXXX, XXXXXXX
-  /*                 +--------|--------|--------+    +--------|--------+                           */
 
-/*
- * Add Home Row mod to a layout.
- *
- * Expects a 10-key per row layout.  Adds support for GACS (Gui, Alt, Ctl, Shift)
- * home row.  The layout passed in parameter must contain at least 20 keycodes.
- *
- * This is meant to be used with `LAYER_ALPHAS_QWERTY` defined above, eg.:
- *
- *     HOME_ROW_MOD_GACS(LAYER_ALPHAS_QWERTY)
+#define LAYOUT_LAYER_NAV \
+    ___________TRANSPARENT_HALF_ROW____________,    KC_NO,  KC_HOME,  KC_UP,   KC_END,  KC_PGUP, \
+     KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_NO,     KC_NO,  KC_LEFT,  KC_DOWN, KC_RGHT, KC_PGDN, \
+    ___________TRANSPARENT_HALF_ROW____________,    KC_LCAP,  KC_NO,  KC_NO,   KC_NO,   KC_NO,   \
+                      _______, _______, _______,    _______, _______
 
-#define _HOME_ROW_MOD_GACS(                                            \
-    L00, L01, L02, L03, L04, R05, R06, R07, R08, R09,                  \
-    L10, L11, L12, L13, L14, R15, R16, R17, R18, R19,                  \
-    ...)                                                               \
-             L00,         L01,         L02,         L03,         L04,  \
-             R05,         R06,         R07,         R08,         R09,  \
-      LGUI_T(L10), LALT_T(L11), LCTL_T(L12), LSFT_T(L13),        L14,  \
-             R15,  RSFT_T(R16), RCTL_T(R17), LALT_T(R18), RGUI_T(R19), \
-      __VA_ARGS__
-#define HOME_ROW_MOD_GACS(...) _HOME_ROW_MOD_GACS(__VA_ARGS__)
-*/
+
+#define LAYOUT_LAYER_NUM \
+    KC_NO,  KC_7,  KC_9,  KC_9,  KC_NO,    KC_NO,   KC_NO,   KC_VOLU,  KC_NO,   KC_NO,    \
+    KC_NO,  KC_4,  KC_5,  KC_6,  KC_NO,    KC_MPLY, KC_MPRV, KC_VOLD,  KC_MNXT, KC_NO,    \
+    KC_NO,  KC_1,  KC_2,  KC_3,  KC_NO,    C(KC_0), C(KC_MINS), C(KC_PLUS), KC_NO, KC_NO, \
+             _______, _______, _______,    _______, _______
+
+
+#define LAYOUT_LAYER_SYM \
+    KC_TILD, KC_AMPR, KC_ASTR,  KC_CIRC, KC_PIPE,    KC_NO,   KC_LCBR, KC_RCBR, KC_NO,   KC_NO,   \
+    KC_GRV,  KC_DLR,  KC_PERC,  KC_EQL,  KC_PLUS,    KC_COLN, KC_LPRN, KC_RPRN, KC_QUOT, KC_DQUO, \
+    KC_NO,   KC_EXLM, KC_AT,    KC_HASH, KC_BSLS,    KC_SCLN, KC_LBRC, KC_RBRC, KC_NO,   KC_NO,   \
+                       _______, _______, _______,    _______, _______
+
+
+#define LAYOUT_LAYER_FN \
+    KC_F15,  KC_F7,  KC_F8,  KC_F9,  KC_F12,    _______________DEAD_HALF_ROW_______________, \
+    KC_F14,  KC_F4,  KC_F5,  KC_F6,  KC_F11,    _______________DEAD_HALF_ROW_______________, \
+    KC_F13,  KC_F1,  KC_F2,  KC_F3,  KC_F10,    _______________DEAD_HALF_ROW_______________, \
+                  _______, _______, _______,    _______, _______
+
+
+#define LAYOUT_LAYER_PTR \
+    _______________DEAD_HALF_ROW_______________,    _______________DEAD_HALF_ROW_______________, \
+    _______________DEAD_HALF_ROW_______________,    _______________DEAD_HALF_ROW_______________, \
+    _______________DEAD_HALF_ROW_______________,    _______________DEAD_HALF_ROW_______________, \
+             _______, _______, _______,    _______, _______
+
+
 
 /*
  * Add pointer layer keys to a layout.
@@ -148,11 +146,12 @@ enum charybdis_keymap_layers {
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [LAYER_BASE] = LAYOUT_wrapper(
-    //POINTER_MOD(HOME_ROW_MOD_GACS(LAYOUT_LAYER_BASE))
-    POINTER_MOD(LAYOUT_LAYER_BASE)
-  )//,
-  //[LAYER_POINTER] = LAYOUT_wrapper(LAYOUT_LAYER_POINTER),
+  [LAYER_BASE] = LAYOUT_wrapper(POINTER_MOD(LAYOUT_LAYER_BASE)),
+  [LAYER_NAV] = LAYOUT_wrapper(LAYOUT_LAYER_NAV),
+  [LAYER_NUM] = LAYOUT_wrapper(LAYOUT_LAYER_NUM),
+  [LAYER_SYM] = LAYOUT_wrapper(LAYOUT_LAYER_SYM),
+  [LAYER_FN] = LAYOUT_wrapper(LAYOUT_LAYER_FN),
+  [LAYER_PTR] = LAYOUT_wrapper(LAYOUT_LAYER_PTR),
 };
 
 
